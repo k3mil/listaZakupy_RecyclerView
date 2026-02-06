@@ -1,10 +1,12 @@
 package com.example.listazakupw;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,15 +39,34 @@ public class ZakupyAdapter extends RecyclerView.Adapter<ZakupyAdapter.ProduktVie
     @Override
     public int getItemCount() {
         return listaZakopow.size();
+
     }
 
-    public class ProduktViewHolder extends RecyclerView.ViewHolder {
+    public void usuwanieZaznaczone(){
+        listaZakopow.removeIf(x->x.getCzyZakupiono());
+        notifyDataSetChanged();
+    }
+    public void dodajProdukt(Produkt produkt){
+        listaZakopow.add(produkt);
+        notifyDataSetChanged();
+
+    }
+
+    public class ProduktViewHolder extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
         CheckBox checkBoxProdukt;
         ZakupyAdapter zakupyAdapter;
         public ProduktViewHolder(@NonNull View itemView, ZakupyAdapter adapter) {
             super(itemView);
             zakupyAdapter = adapter;
             checkBoxProdukt = itemView.findViewById(R.id.checkBox);
+            checkBoxProdukt.setOnCheckedChangeListener(this);
+        }
+
+        @Override
+        public void onCheckedChanged(@NonNull CompoundButton compoundButton, boolean b) {
+            int indeksProduktu = getLayoutPosition();
+            listaZakopow.get(indeksProduktu).setCzyZakupiono(b);
+            Log.i("SPR", "weszlo");
         }
     }
 }
